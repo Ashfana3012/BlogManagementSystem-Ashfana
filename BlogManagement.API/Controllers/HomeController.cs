@@ -9,7 +9,7 @@ namespace BlogManagement.API.Controllers
         [HttpGet]
         public IActionResult Get()
         {
-            return Ok("Blog Management API is running successfully.");
+            return Ok("Hello Api");
         }
     }
 }

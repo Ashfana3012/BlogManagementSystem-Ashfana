@@ -1,0 +1,9 @@
+@import url("./styles/global.css");
+@import url("./styles/navbar.css");
+@import url("./styles/home.css");
+@import url("./styles/footer.css");
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+}
