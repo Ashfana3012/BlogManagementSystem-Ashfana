@@ -4,11 +4,8 @@ import {
   Mail,
   Phone,
   Globe,
-  Github,
-  Linkedin,
-  Twitter,
 } from "lucide-react";
-
+import { FaGithub, FaLinkedin, FaXTwitter } from "react-icons/fa6";
 function Footer() {
   return (
     <footer id="about">
@@ -25,22 +22,9 @@ function Footer() {
             BlogSphere is a modern blogging platform where creators can write,
             publish and share ideas with readers around the world.
           </p>
-
-          <div className="social-links">
-
-            <a href="#">
-              <Github size={20} />
-            </a>
-
-            <a href="#">
-              <Linkedin size={20} />
-            </a>
-
-            <a href="#">
-              <Twitter size={20} />
-            </a>
-
-          </div>
+<FaGithub />
+<FaLinkedin />
+<FaXTwitter />
 
         </div>
 
