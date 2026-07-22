@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using BlogManagement.API.Models;
 
 namespace BlogManagement.API.Controllers
 {
@@ -6,46 +7,47 @@ namespace BlogManagement.API.Controllers
     [Route("api/[controller]")]
     public class BlogsController : ControllerBase
     {
-
-        private static List<object> blogs = new()
+        private static List<Blog> blogs = new()
         {
-            new
+            new Blog
             {
-                id = 1,
-                title = "Getting Started with ASP.NET Core",
-                author = "Ashfana"
+                Id = 1,
+                Title = "Getting Started with ASP.NET Core",
+                Category = "Technology",
+                Author = "Ashfana",
+                Image = "",
+                Content = "Learn ASP.NET Core Web API."
             },
 
-            new
+            new Blog
             {
-                id = 2,
-                title = "React Development",
-                author = "Ashfana"
+                Id = 2,
+                Title = "React Development",
+                Category = "Programming",
+                Author = "Ashfana",
+                Image = "",
+                Content = "Learn React Fundamentals."
             }
         };
 
-
-        // GET: api/blogs
         [HttpGet]
         public IActionResult GetBlogs()
         {
             return Ok(blogs);
         }
 
-
-
-        // POST: api/blogs
         [HttpPost]
-        public IActionResult CreateBlog([FromBody] object blog)
+        public IActionResult AddBlog(Blog blog)
         {
+            blog.Id = blogs.Count + 1;
+
             blogs.Add(blog);
 
             return Ok(new
             {
-                message = "Blog created successfully",
+                message = "Blog added successfully.",
                 data = blog
             });
         }
-
     }
 }
