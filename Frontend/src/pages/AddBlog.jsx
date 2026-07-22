@@ -3,6 +3,7 @@ import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import "../styles/addBlog.css";
 import { SquarePen } from "lucide-react";
+import { addBlog } from "../api/blog";
 
 function AddBlog() {
   const [formData, setFormData] = useState({
@@ -62,27 +63,33 @@ function AddBlog() {
 
     return Object.keys(newErrors).length === 0;
   };
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!validateForm()) return;
 
     setIsSubmitting(true);
 
-    setTimeout(() => {
-      alert("Blog Published Successfully!");
+    try {
+  await addBlog(formData);
 
-      setFormData({
-        title: "",
-        category: "",
-        author: "",
-        image: "",
-        content: "",
-      });
+  alert("Blog Published Successfully!");
 
-      setErrors({});
-      setIsSubmitting(false);
-    }, 1000);
+  setFormData({
+    title: "",
+    category: "",
+    author: "",
+    image: "",
+    content: "",
+  });
+
+  setErrors({});
+} catch (error) {
+  alert("Failed to publish blog.");
+  console.error(error);
+} finally {
+  setIsSubmitting(false);
+}
   };
   return (
     <>

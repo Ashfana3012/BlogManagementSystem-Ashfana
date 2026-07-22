@@ -1,8 +1,24 @@
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { getBlogs } from "../api/blog";
 
 function Home() {
+  const [blogs, setBlogs] = useState([]);
+
+useEffect(() => {
+  loadBlogs();
+}, []);
+
+const loadBlogs = async () => {
+  try {
+    const data = await getBlogs();
+    setBlogs(data);
+  } catch (error) {
+    console.error(error);
+  }
+};
   return (
     <>
       <Navbar />
@@ -72,69 +88,54 @@ function Home() {
             <h2 className="section-title">Latest Blogs</h2>
 
             <div className="blog-grid">
-              <Link to="/blog/1" className="blog-card">
-                <div className="blog-image tech-bg"></div>
 
-                <div className="blog-content">
-                  <span className="category">Technology</span>
+  {blogs.length === 0 ? (
 
-                  <h3>Getting Started with ASP.NET Core</h3>
+    <h3>No Blogs Found</h3>
 
-                  <p>
-                    Learn how to build scalable Web APIs using ASP.NET Core and
-                    C#.
-                  </p>
+  ) : (
 
-                  <div className="blog-footer">
-                    <span>Ashfana</span>
+    blogs.map((blog) => (
 
-                    <span className="read-more">Read More →</span>
-                  </div>
-                </div>
-              </Link>
+      <Link
+        key={blog.id}
+        to={`/blog/${blog.id}`}
+        className="blog-card"
+      >
 
-              <Link to="/blog/2" className="blog-card">
-                <div className="blog-image react-bg"></div>
+        <div className="blog-image tech-bg"></div>
 
-                <div className="blog-content">
-                  <span className="category">React</span>
+        <div className="blog-content">
 
-                  <h3>Modern React Development</h3>
+          <span className="category">
+            {blog.category || "General"}
+          </span>
 
-                  <p>
-                    Build reusable components and create fast user interfaces
-                    with React.
-                  </p>
+          <h3>{blog.title}</h3>
 
-                  <div className="blog-footer">
-                    <span>Ashfana</span>
+          <p>
+            {blog.content || "No description available."}
+          </p>
 
-                    <span className="read-more">Read More →</span>
-                  </div>
-                </div>
-              </Link>
+          <div className="blog-footer">
 
-              <Link to="/blog/3" className="blog-card">
-                <div className="blog-image sql-bg"></div>
+            <span>{blog.author}</span>
 
-                <div className="blog-content">
-                  <span className="category">Database</span>
+            <span className="read-more">
+              Read More →
+            </span>
 
-                  <h3>SQL Server Performance Tips</h3>
+          </div>
 
-                  <p>
-                    Improve query performance using indexes and optimization
-                    techniques.
-                  </p>
+        </div>
 
-                  <div className="blog-footer">
-                    <span>Ashfana</span>
+      </Link>
 
-                    <span className="read-more">Read More →</span>
-                  </div>
-                </div>
-              </Link>
-            </div>
+    ))
+
+  )}
+
+</div>
           </div>
         </section>
       </main>
