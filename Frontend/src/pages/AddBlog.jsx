@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import "../styles/addBlog.css";
 import { SquarePen } from "lucide-react";
-import { addBlog } from "../api/blog";
+import { addBlog, getBlogById, updateBlog } from "../api/blog";
+import { useNavigate, useParams } from "react-router-dom";
 
 function AddBlog() {
   const [formData, setFormData] = useState({
@@ -15,7 +16,32 @@ function AddBlog() {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errors, setErrors] = useState({});
+  const { id } = useParams();
+  const navigate = useNavigate();
 
+  const isEditMode = !!id;
+
+  useEffect(() => {
+    if (isEditMode) {
+      loadBlog();
+    }
+  }, [id]);
+
+  const loadBlog = async () => {
+    try {
+      const blog = await getBlogById(id);
+
+      setFormData({
+        title: blog.title || "",
+        category: blog.category || "",
+        author: blog.author || "",
+        image: blog.image || "",
+        content: blog.content || "",
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -71,25 +97,32 @@ function AddBlog() {
     setIsSubmitting(true);
 
     try {
-  await addBlog(formData);
+      if (isEditMode) {
+        await updateBlog(id, formData);
+        alert("Blog Updated Successfully!");
 
-  alert("Blog Published Successfully!");
+        navigate("/");
+      } else {
+        await addBlog(formData);
 
-  setFormData({
-    title: "",
-    category: "",
-    author: "",
-    image: "",
-    content: "",
-  });
+        alert("Blog Published Successfully!");
+      }
 
-  setErrors({});
-} catch (error) {
-  alert("Failed to publish blog.");
-  console.error(error);
-} finally {
-  setIsSubmitting(false);
-}
+      setFormData({
+        title: "",
+        category: "",
+        author: "",
+        image: "",
+        content: "",
+      });
+
+      setErrors({});
+    } catch (error) {
+      alert("Failed to publish blog.");
+      console.error(error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
   return (
     <>
@@ -99,7 +132,7 @@ function AddBlog() {
         <div className="blog-form-container">
           <h1 className="page-title">
             <SquarePen size={34} />
-            <span>Write a New Blog</span>
+            <span>{isEditMode ? "Edit Blog" : "Write a New Blog"}</span>
           </h1>
 
           <p>
@@ -186,14 +219,14 @@ function AddBlog() {
                 placeholder="Write your blog here..."
                 maxLength={1000}
               ></textarea>
-             <p
-  className="character-count"
-  style={{
-    color: formData.content.length > 900 ? "#EF4444" : "#64748B",
-  }}
->
-  {formData.content.length} / 1000 characters
-</p>
+              <p
+                className="character-count"
+                style={{
+                  color: formData.content.length > 900 ? "#EF4444" : "#64748B",
+                }}
+              >
+                {formData.content.length} / 1000 characters
+              </p>
               {errors.content && <p className="error-text">{errors.content}</p>}
             </div>
 
@@ -202,7 +235,13 @@ function AddBlog() {
               className="publish-btn"
               disabled={isSubmitting}
             >
-              {isSubmitting ? "Publishing..." : "Publish Blog"}
+              {isSubmitting
+                ? isEditMode
+                  ? "Updating..."
+                  : "Publishing..."
+                : isEditMode
+                  ? "Update Blog"
+                  : "Publish Blog"}
             </button>
           </form>
         </div>

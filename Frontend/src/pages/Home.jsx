@@ -7,18 +7,18 @@ import { getBlogs } from "../api/blog";
 function Home() {
   const [blogs, setBlogs] = useState([]);
 
-useEffect(() => {
-  loadBlogs();
-}, []);
+  useEffect(() => {
+    loadBlogs();
+  }, []);
 
-const loadBlogs = async () => {
-  try {
-    const data = await getBlogs();
-    setBlogs(data);
-  } catch (error) {
-    console.error(error);
-  }
-};
+  const loadBlogs = async () => {
+    try {
+      const data = await getBlogs();
+      setBlogs(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   return (
     <>
       <Navbar />
@@ -88,54 +88,44 @@ const loadBlogs = async () => {
             <h2 className="section-title">Latest Blogs</h2>
 
             <div className="blog-grid">
+              {blogs.length === 0 ? (
+                <h3>No Blogs Found</h3>
+              ) : (
+                blogs.map((blog) => (
+                  <div key={blog.id} className="blog-card">
+                    <div className="blog-image tech-bg"></div>
 
-  {blogs.length === 0 ? (
+                    <div className="blog-content">
+                      <span className="category">
+                        {blog.category || "General"}
+                      </span>
 
-    <h3>No Blogs Found</h3>
+                      <h3>{blog.title}</h3>
 
-  ) : (
+                      <p>{blog.content || "No description available."}</p>
 
-    blogs.map((blog) => (
+                      <div className="blog-footer">
+                        <span>{blog.author}</span>
 
-      <Link
-        key={blog.id}
-        to={`/blog/${blog.id}`}
-        className="blog-card"
-      >
+                        <div className="blog-actions">
+                          <Link
+                            to={`/edit-blog/${blog.id}`}
+                            className="edit-btn"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                             Edit
+                          </Link>
 
-        <div className="blog-image tech-bg"></div>
-
-        <div className="blog-content">
-
-          <span className="category">
-            {blog.category || "General"}
-          </span>
-
-          <h3>{blog.title}</h3>
-
-          <p>
-            {blog.content || "No description available."}
-          </p>
-
-          <div className="blog-footer">
-
-            <span>{blog.author}</span>
-
-            <span className="read-more">
-              Read More →
-            </span>
-
-          </div>
-
-        </div>
-
-      </Link>
-
-    ))
-
-  )}
-
-</div>
+                          <Link to={`/blog/${blog.id}`} className="read-more">
+                            Read More →
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
           </div>
         </section>
       </main>

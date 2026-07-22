@@ -30,22 +30,59 @@ namespace BlogManagement.API.Controllers
             }
         };
 
+        // GET
         [HttpGet]
         public IActionResult GetBlogs()
         {
             return Ok(blogs);
         }
 
-        [HttpPost]
-        public IActionResult AddBlog(Blog blog)
+        // GET BY ID
+        [HttpGet("{id}")]
+        public IActionResult GetBlog(int id)
         {
-            blog.Id = blogs.Count + 1;
+            var blog = blogs.FirstOrDefault(x => x.Id == id);
+
+            if (blog == null)
+                return NotFound();
+
+            return Ok(blog);
+        }
+
+        // POST
+        [HttpPost]
+        public IActionResult CreateBlog([FromBody] Blog blog)
+        {
+            blog.Id = blogs.Count == 0 ? 1 : blogs.Max(x => x.Id) + 1;
 
             blogs.Add(blog);
 
+            return Ok(blog);
+        }
+
+        // PUT
+        [HttpPut("{id}")]
+        public IActionResult UpdateBlog(int id, [FromBody] Blog updatedBlog)
+        {
+            var blog = blogs.FirstOrDefault(x => x.Id == id);
+
+            if (blog == null)
+            {
+                return NotFound(new
+                {
+                    message = "Blog not found"
+                });
+            }
+
+            blog.Title = updatedBlog.Title;
+            blog.Category = updatedBlog.Category;
+            blog.Author = updatedBlog.Author;
+            blog.Image = updatedBlog.Image;
+            blog.Content = updatedBlog.Content;
+
             return Ok(new
             {
-                message = "Blog added successfully.",
+                message = "Blog updated successfully",
                 data = blog
             });
         }

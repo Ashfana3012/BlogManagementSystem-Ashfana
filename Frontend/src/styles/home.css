@@ -380,3 +380,28 @@ transform:translateY(0);
     display:block;
     cursor:pointer;
 }
+.blog-actions{
+    display:flex;
+    align-items:center;
+    gap:15px;
+}
+
+.edit-btn{
+    background:#DBEAFE;
+    color:#2563EB;
+    padding:8px 14px;
+    border-radius:8px;
+    font-size:14px;
+    font-weight:600;
+    transition:.3s;
+}
+
+.edit-btn:hover{
+    background:#2563EB;
+    color:#fff;
+}
+
+.read-more{
+    color:#2563EB;
+    font-weight:600;
+}
