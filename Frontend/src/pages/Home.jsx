@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import { getBlogs } from "../api/blog";
+import { getBlogs, deleteBlog } from "../api/blog";
 
 function Home() {
   const [blogs, setBlogs] = useState([]);
@@ -17,6 +17,24 @@ function Home() {
       setBlogs(data);
     } catch (error) {
       console.error(error);
+    }
+  };
+  const handleDelete = async (id) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this blog?",
+    );
+
+    if (!confirmDelete) return;
+
+    try {
+      await deleteBlog(id);
+
+      alert("Blog deleted successfully!");
+
+      loadBlogs();
+    } catch (error) {
+      console.error(error);
+      alert("Failed to delete blog.");
     }
   };
   return (
@@ -111,14 +129,16 @@ function Home() {
                           <Link
                             to={`/edit-blog/${blog.id}`}
                             className="edit-btn"
-                            onClick={(e) => e.stopPropagation()}
                           >
-                             Edit
+                            Edit
                           </Link>
 
-                          <Link to={`/blog/${blog.id}`} className="read-more">
-                            Read More →
-                          </Link>
+                          <button
+                            className="delete-btn"
+                            onClick={() => handleDelete(blog.id)}
+                          >
+                            Delete
+                          </button>
                         </div>
                       </div>
                     </div>

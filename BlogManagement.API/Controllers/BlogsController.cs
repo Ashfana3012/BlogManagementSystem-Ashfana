@@ -86,5 +86,27 @@ namespace BlogManagement.API.Controllers
                 data = blog
             });
         }
+
+        // DELETE
+        [HttpDelete("{id}")]
+        public IActionResult DeleteBlog(int id)
+        {
+            var blog = blogs.FirstOrDefault(x => x.Id == id);
+
+            if (blog == null)
+            {
+                return NotFound(new
+                {
+                    message = "Blog not found"
+                });
+            }
+
+            blogs.Remove(blog);
+
+            return Ok(new
+            {
+                message = "Blog deleted successfully"
+            });
+        }
     }
 }

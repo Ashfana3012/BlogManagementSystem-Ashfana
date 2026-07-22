@@ -21,3 +21,8 @@ export const updateBlog = async (id, blog) => {
   const response = await axios.put(`${API_URL}/${id}`, blog);
   return response.data;
 };
+
+export const deleteBlog = async (id) => {
+  const response = await axios.delete(`${API_URL}/${id}`);
+  return response.data;
+};
