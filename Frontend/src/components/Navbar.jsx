@@ -10,11 +10,13 @@ function Navbar() {
 
         <div className="nav-links">
 
-          <Link to="/">Home</Link>
+          <Link to="/" className="active">
+            Home
+          </Link>
 
           <a href="#blogs">Blogs</a>
 
-          <a href="#about">About</a>
+          <a href="#footer">About</a>
 
           <Link to="/add-blog" className="write-btn">
             Add Blog
