@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "https://localhost:7299/api/blogs";
+const API_URL = "https://blogmanagementsystem-ashfana-4.onrender.com/api/blogs";
 
 export const getBlogs = async () => {
   const response = await axios.get(API_URL);
