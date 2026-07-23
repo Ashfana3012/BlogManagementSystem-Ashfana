@@ -5,28 +5,37 @@ namespace BlogManagement.API
     {
         public static void Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);
+            var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+            {
+                Args = args
+            });
 
-            // Add services to the container.
+            builder.Configuration.Sources
+                .OfType<Microsoft.Extensions.Configuration.Json.JsonConfigurationSource>()
+                .ToList()
+                .ForEach(x => x.ReloadOnChange = false);
+
+
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("AllowReactApp", policy =>
                 {
-                    policy.WithOrigins()
+                    policy.WithOrigins("https://poetic-jalebi-58735f.netlify.app")
                           .AllowAnyHeader()
                           .AllowAnyMethod();
                 });
             });
+
             builder.Services.AddControllers();
-            // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-         
+
 
             var app = builder.Build();
+
             app.UseCors("AllowReactApp");
-            app.UseHttpsRedirection();
+
+            // app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 
